@@ -6,18 +6,18 @@ namespace KefirTestProject.Models
 {
     public class SkillGraph
     {
-        private IList<Skill> _skills;
+        public IList<Skill> Skills { get; }
 
         public SkillGraph(IList<Skill> skills)
         {
-            _skills = skills;
+            Skills = skills;
 
             SetSkillStatuses();
         }
 
         private void SetSkillStatuses()
         {
-            foreach (var skill in _skills)
+            foreach (var skill in Skills)
             {
                 if (skill.Id == 0)
                 {
@@ -29,7 +29,7 @@ namespace KefirTestProject.Models
 
                 foreach (var ancestorId in skill.Ancestors)
                 {
-                    var ancestorSkill = _skills.First(x => x.Id == ancestorId);
+                    var ancestorSkill = Skills.First(x => x.Id == ancestorId);
                     if (ancestorSkill.Status != SkillStatus.Learned)
                     {
                         skill.Status = SkillStatus.Closed;

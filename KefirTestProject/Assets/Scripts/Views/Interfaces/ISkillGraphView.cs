@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using KefirTestProject.Enums;
 
 namespace KefirTestProject.Views.Interfaces
 {
@@ -7,6 +8,8 @@ namespace KefirTestProject.Views.Interfaces
     {
         event Action<int> SkillSelectionChanged;
 
-        public IList<SkillView> SkillViews { get; }
+        IList<SkillView> SkillViews { get; }
+
+        void UpdateSkillInteraction(SkillStatus skillStatus);
     }
 }

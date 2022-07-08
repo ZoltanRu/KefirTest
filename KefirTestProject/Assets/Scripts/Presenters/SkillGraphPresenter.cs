@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using KefirTestProject.Enums;
 using KefirTestProject.Models;
 using KefirTestProject.Views.Interfaces;
 using UnityEngine;
@@ -12,7 +13,7 @@ namespace KefirTestProject.Presenters
         private ISkillGraphView _skillGraphView;
         private SkillGraph _skillGraph;
 
-        private int _selectedSkillId = 0;
+        private Skill _selectedSkill;
 
         private void Awake()
         {
@@ -39,7 +40,12 @@ namespace KefirTestProject.Presenters
 
         private void OnSkillSelectionChanged(int id)
         {
-            _selectedSkillId = id;
+            _selectedSkill = _skillGraph.Skills.First(x => x.Id == id);
+
+            // Root skill is closed for modification
+            _skillGraphView.UpdateSkillInteraction(
+                _selectedSkill.Id == 0 ? SkillStatus.Closed :
+                    _selectedSkill.Status);
         }
     }
 }

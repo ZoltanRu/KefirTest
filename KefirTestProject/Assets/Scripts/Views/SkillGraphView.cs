@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using KefirTestProject.Enums;
 using KefirTestProject.Utils;
 using KefirTestProject.Views.Interfaces;
 using UnityEngine;
@@ -13,11 +14,16 @@ namespace KefirTestProject.Views
         public event Action<int> SkillSelectionChanged;
 
         [SerializeField] private List<SkillView> _skillViews;
+
+        [Header("Prefabs")]
         [SerializeField] private LineBetweenObjects _connectionLinePrefab;
+        [SerializeField] private GameObject _selectorPrefab;
 
         [Header("Skill Selection")] 
         [SerializeField] private Button _learnSkillButton;
         [SerializeField] private Button _forgetSkillButton;
+
+        private GameObject _selector;
 
         public IList<SkillView> SkillViews => _skillViews;
 
@@ -25,6 +31,8 @@ namespace KefirTestProject.Views
         {
             _learnSkillButton.onClick.AddListener(LearnSkill);
             _forgetSkillButton.onClick.AddListener(ForgetSkill);
+            _learnSkillButton.interactable = false;
+            _forgetSkillButton.interactable = false;
 
             SetupViews();
         }
@@ -58,6 +66,20 @@ namespace KefirTestProject.Views
             }
         }
 
+        private void OnSkillSelected(int id)
+        {
+            SkillSelectionChanged?.Invoke(id);
+
+            if (_selector == null)
+            {
+                _selector = Instantiate(_selectorPrefab, transform);
+                _selector.transform.SetAsFirstSibling();
+            }
+
+            var selectedView = _skillViews.First(x => x.SkillAsset.Id == id);
+            _selector.transform.localPosition = selectedView.transform.localPosition;
+        }
+
         private void ForgetSkill()
         {
             throw new NotImplementedException();
@@ -68,11 +90,23 @@ namespace KefirTestProject.Views
             throw new NotImplementedException();
         }
 
-        private void OnSkillSelected(int id)
+        public void UpdateSkillInteraction(SkillStatus skillStatus)
         {
-            SkillSelectionChanged?.Invoke(id);
-
-            //TODO: spawn selector
+            switch (skillStatus)
+            {
+                case SkillStatus.Closed:
+                    _learnSkillButton.interactable = false;
+                    _forgetSkillButton.interactable = false;
+                    break;
+                case SkillStatus.Learned:
+                    _learnSkillButton.interactable = false;
+                    _forgetSkillButton.interactable = true;
+                    break;
+                case SkillStatus.Opened:
+                    _learnSkillButton.interactable = true;
+                    _forgetSkillButton.interactable = false;
+                    break;
+            }
         }
     }
 }
