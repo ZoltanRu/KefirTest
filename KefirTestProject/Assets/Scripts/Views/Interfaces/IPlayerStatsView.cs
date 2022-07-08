@@ -4,7 +4,7 @@ namespace KefirTestProject.Views.Interfaces
 {
     public interface IPlayerStatsView : IView
     {
-        event Action SkillPointAdded;
+        event Action<int> SkillPointsChanged;
 
         void UpdateSkillPointsText(int skillPoints);
     }

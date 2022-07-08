@@ -8,11 +8,10 @@ namespace KefirTestProject.Views
 {
     public class PlayerStatsView : MonoBehaviour, IPlayerStatsView
     {
-        public event Action SkillPointAdded;
+        public event Action<int> SkillPointsChanged;
 
         [Header("UI Elements")]
         [SerializeField] private TMP_Text _skillPoints;
-
         [SerializeField] private Button _addSkillPointButton;
 
         public void UpdateSkillPointsText(int skillPoints)
@@ -32,7 +31,7 @@ namespace KefirTestProject.Views
 
         private void AddSkillPoint()
         {
-            SkillPointAdded?.Invoke();
+            SkillPointsChanged?.Invoke(1);
         }
     }
 }

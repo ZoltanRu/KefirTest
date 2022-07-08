@@ -44,6 +44,11 @@ namespace KefirTestProject.Models
             return true;
         }
 
+        public Skill GetSkillById(int id)
+        {
+            return Skills.First(x => x.Id == id);
+        }
+
         public void UpdateSkillStatuses(int id, SkillOperation operation)
         {
             var skillsToUpdate = new HashSet<Skill>();
@@ -131,11 +136,6 @@ namespace KefirTestProject.Models
                     }
                 }
             }
-        }
-
-        private Skill GetSkillById(int id)
-        {
-            return Skills.First(x => x.Id == id);
         }
     }
 }

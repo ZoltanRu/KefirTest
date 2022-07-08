@@ -15,7 +15,6 @@ namespace KefirTestProject.Views
         public event Action<int> LearnSkillClicked;
         public event Action<int> ForgetSkillClicked;
 
-
         [SerializeField] private List<SkillView> _skillViews;
 
         [Header("Prefabs")]
@@ -94,11 +93,14 @@ namespace KefirTestProject.Views
             LearnSkillClicked?.Invoke(_selectedView.SkillAsset.Id);
         }
 
-        public void UpdateSkillInteraction(SkillStatus skillStatus, bool hasConnectionWithRoot)
+        public void UpdateSkillInteraction(SkillStatus skillStatus, 
+            bool hasConnectionWithRoot,
+            bool isEnoughSkillPoints)
         {
             _forgetSkillButton.interactable = 
                 hasConnectionWithRoot && _selectedView.SkillAsset.Id != 0;
-            _learnSkillButton.interactable = skillStatus == SkillStatus.Opened;
+            _learnSkillButton.interactable = 
+                skillStatus == SkillStatus.Opened && isEnoughSkillPoints;
         }
     }
 }

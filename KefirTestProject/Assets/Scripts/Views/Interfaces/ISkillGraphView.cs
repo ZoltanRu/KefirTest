@@ -12,6 +12,7 @@ namespace KefirTestProject.Views.Interfaces
 
         IList<SkillView> SkillViews { get; }
 
-        void UpdateSkillInteraction(SkillStatus skillStatus, bool hasConnectionWithRoot);
+        void UpdateSkillInteraction(SkillStatus skillStatus, 
+            bool isForgetPossible, bool isEnoughSkillPoints);
     }
 }

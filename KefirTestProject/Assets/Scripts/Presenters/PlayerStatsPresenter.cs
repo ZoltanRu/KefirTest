@@ -9,13 +9,15 @@ namespace KefirTestProject.Presenters
         private PlayerStats _playerStats;
         private IPlayerStatsView _playerStatsView;
 
+        public PlayerStats PlayerStats => _playerStats;
+
         private void Awake()
         {
             _playerStats = new PlayerStats();
             _playerStats.SkillPointsChanged += UpdateSkillPointView;
 
             _playerStatsView = GetComponent<IPlayerStatsView>();
-            _playerStatsView.SkillPointAdded += UpdateSkillPointModel;
+            _playerStatsView.SkillPointsChanged += UpdateSkillPointModel;
 
             UpdateSkillPointView();
         }
@@ -23,7 +25,7 @@ namespace KefirTestProject.Presenters
         private void OnDestroy()
         {
             _playerStats.SkillPointsChanged += UpdateSkillPointView;
-            _playerStatsView.SkillPointAdded -= UpdateSkillPointModel;
+            _playerStatsView.SkillPointsChanged -= UpdateSkillPointModel;
         }
 
         private void UpdateSkillPointView()
@@ -31,9 +33,9 @@ namespace KefirTestProject.Presenters
             _playerStatsView.UpdateSkillPointsText(_playerStats.SkillPoints);
         }
 
-        private void UpdateSkillPointModel()
+        private void UpdateSkillPointModel(int amount)
         {
-            _playerStats.SkillPoints++;
+            _playerStats.SkillPoints += amount;
         }
     }
 }
