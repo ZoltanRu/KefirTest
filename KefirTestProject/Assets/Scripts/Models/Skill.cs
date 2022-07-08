@@ -15,6 +15,7 @@ namespace KefirTestProject.Models
         public int SkillPoints { get; set; }
 
         public IList<int> Ancestors { get; }
+        public IList<int> Children { get; }
 
         public SkillStatus Status
         {
@@ -35,6 +36,12 @@ namespace KefirTestProject.Models
             SkillPoints = skillPoints;
             Ancestors = ancestors;
             Status = SkillStatus.Closed;
+            Children = new List<int>();
+        }
+
+        public void AddChild(int childId)
+        {
+            Children.Add(childId);
         }
     }
 }

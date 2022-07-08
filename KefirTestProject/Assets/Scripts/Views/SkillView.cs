@@ -61,6 +61,9 @@ namespace KefirTestProject.Views
                 case SkillStatus.Learned:
                     _skillIcon.color = Color.green;
                     break;
+                case SkillStatus.Opened:
+                    _skillIcon.color = Color.white;
+                    break;
             }
         }
     }

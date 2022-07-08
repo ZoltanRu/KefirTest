@@ -7,9 +7,11 @@ namespace KefirTestProject.Views.Interfaces
     public interface ISkillGraphView : IView
     {
         event Action<int> SkillSelectionChanged;
+        event Action<int> LearnSkillClicked;
+        event Action<int> ForgetSkillClicked;
 
         IList<SkillView> SkillViews { get; }
 
-        void UpdateSkillInteraction(SkillStatus skillStatus);
+        void UpdateSkillInteraction(SkillStatus skillStatus, bool hasConnectionWithRoot);
     }
 }

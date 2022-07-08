@@ -12,6 +12,9 @@ namespace KefirTestProject.Views
     public class SkillGraphView : MonoBehaviour, ISkillGraphView
     {
         public event Action<int> SkillSelectionChanged;
+        public event Action<int> LearnSkillClicked;
+        public event Action<int> ForgetSkillClicked;
+
 
         [SerializeField] private List<SkillView> _skillViews;
 
@@ -23,6 +26,7 @@ namespace KefirTestProject.Views
         [SerializeField] private Button _learnSkillButton;
         [SerializeField] private Button _forgetSkillButton;
 
+        private SkillView _selectedView;
         private GameObject _selector;
 
         public IList<SkillView> SkillViews => _skillViews;
@@ -68,45 +72,33 @@ namespace KefirTestProject.Views
 
         private void OnSkillSelected(int id)
         {
-            SkillSelectionChanged?.Invoke(id);
-
             if (_selector == null)
             {
                 _selector = Instantiate(_selectorPrefab, transform);
                 _selector.transform.SetAsFirstSibling();
             }
 
-            var selectedView = _skillViews.First(x => x.SkillAsset.Id == id);
-            _selector.transform.localPosition = selectedView.transform.localPosition;
+            _selectedView = _skillViews.First(x => x.SkillAsset.Id == id);
+            _selector.transform.localPosition = _selectedView.transform.localPosition;
+
+            SkillSelectionChanged?.Invoke(id);
         }
 
         private void ForgetSkill()
         {
-            throw new NotImplementedException();
+            ForgetSkillClicked?.Invoke(_selectedView.SkillAsset.Id);
         }
 
         private void LearnSkill()
         {
-            throw new NotImplementedException();
+            LearnSkillClicked?.Invoke(_selectedView.SkillAsset.Id);
         }
 
-        public void UpdateSkillInteraction(SkillStatus skillStatus)
+        public void UpdateSkillInteraction(SkillStatus skillStatus, bool hasConnectionWithRoot)
         {
-            switch (skillStatus)
-            {
-                case SkillStatus.Closed:
-                    _learnSkillButton.interactable = false;
-                    _forgetSkillButton.interactable = false;
-                    break;
-                case SkillStatus.Learned:
-                    _learnSkillButton.interactable = false;
-                    _forgetSkillButton.interactable = true;
-                    break;
-                case SkillStatus.Opened:
-                    _learnSkillButton.interactable = true;
-                    _forgetSkillButton.interactable = false;
-                    break;
-            }
+            _forgetSkillButton.interactable = 
+                hasConnectionWithRoot && _selectedView.SkillAsset.Id != 0;
+            _learnSkillButton.interactable = skillStatus == SkillStatus.Opened;
         }
     }
 }

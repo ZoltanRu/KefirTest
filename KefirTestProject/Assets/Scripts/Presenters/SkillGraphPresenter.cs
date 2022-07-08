@@ -20,6 +20,8 @@ namespace KefirTestProject.Presenters
             _skillGraphView = GetComponent<ISkillGraphView>();
 
             _skillGraphView.SkillSelectionChanged += OnSkillSelectionChanged;
+            _skillGraphView.LearnSkillClicked += OnLearnSkillClicked;
+            _skillGraphView.ForgetSkillClicked += OnForgetSkillClicked;
 
             foreach (var skillView in _skillGraphView.SkillViews)
             {
@@ -32,20 +34,29 @@ namespace KefirTestProject.Presenters
 
         private void OnDestroy()
         {
-            foreach (var skillView in _skillGraphView.SkillViews)
-            {
-                skillView.Selected -= OnSkillSelectionChanged;
-            }
+            _skillGraphView.SkillSelectionChanged -= OnSkillSelectionChanged;
+            _skillGraphView.LearnSkillClicked -= OnLearnSkillClicked;
+            _skillGraphView.ForgetSkillClicked -= OnForgetSkillClicked;
+        }
+
+        private void OnForgetSkillClicked(int id)
+        {
+            _selectedSkill.Status = SkillStatus.Opened;
+            _skillGraph.UpdateSkillStatuses(id, false);
+            _skillGraphView.UpdateSkillInteraction(_selectedSkill.Status, _skillGraph.HasConnectionWithRoot(id));
+        }
+
+        private void OnLearnSkillClicked(int id)
+        {
+            _selectedSkill.Status = SkillStatus.Learned;
+            _skillGraph.UpdateSkillStatuses(id, true);
+            _skillGraphView.UpdateSkillInteraction(_selectedSkill.Status, _skillGraph.HasConnectionWithRoot(id));
         }
 
         private void OnSkillSelectionChanged(int id)
         {
             _selectedSkill = _skillGraph.Skills.First(x => x.Id == id);
-
-            // Root skill is closed for modification
-            _skillGraphView.UpdateSkillInteraction(
-                _selectedSkill.Id == 0 ? SkillStatus.Closed :
-                    _selectedSkill.Status);
+            _skillGraphView.UpdateSkillInteraction(_selectedSkill.Status, _skillGraph.HasConnectionWithRoot(id));
         }
     }
 }
