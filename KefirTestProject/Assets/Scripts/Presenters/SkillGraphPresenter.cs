@@ -18,7 +18,7 @@ namespace KefirTestProject.Presenters
 
         private bool IsEnoughSkillPoints => _selectedSkill.SkillPoints <= _playerStatsPresenter.PlayerStats.SkillPoints;
 
-        private void Awake()
+        private void Start()
         {
             _playerStatsPresenter.PlayerStats.SkillPointsChanged += UpdateSkillInteraction;
 
