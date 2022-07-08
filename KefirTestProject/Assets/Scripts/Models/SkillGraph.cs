@@ -16,68 +16,60 @@ namespace KefirTestProject.Models
 
             Skills[0].Status = SkillStatus.Learned;
 
-            UpdateSkillStatuses(Skills);
+            UpdateSkillStatusesInternal(Skills);
         }
 
-        private void SetupChildren()
+        public bool CheckForgetPossibility(int id)
         {
-            foreach (var skill in Skills)
+            var skill = GetSkillById(id);
+
+            if (skill.Status != SkillStatus.Learned)
             {
-                foreach (var ancestorId in skill.Ancestors)
-                {
-                    var ancestor = Skills.First(x => x.Id == ancestorId);
-                    ancestor.AddChild(skill.Id);
-                }
+                return false;
             }
-        }
-
-        private void UpdateSkillStatuses(IEnumerable<Skill> skills)
-        {
-            foreach (var skill in skills)
-            {
-                if (skill.Status == SkillStatus.Learned)
-                {
-                    continue;
-                }
-
-                skill.Status = SkillStatus.Opened;
-
-                foreach (var ancestorId in skill.Ancestors)
-                {
-                    var ancestorSkill = Skills.First(x => x.Id == ancestorId);
-                    if (ancestorSkill.Status != SkillStatus.Learned)
-                    {
-                        skill.Status = SkillStatus.Closed;
-                        break;
-                    }
-                }
-            }
-        }
-
-        public void UpdateSkillStatuses(int id, bool searchDown)
-        {
-            var skillsToUpdate = new HashSet<Skill>();
-            var skill = Skills.First(x => x.Id == id);
 
             foreach (var childId in skill.Children)
             {
-                skillsToUpdate.Add(Skills.First(x => x.Id == childId));
-            }
+                var child = GetSkillById(childId);
 
-            if (!searchDown)
-            {
-                foreach (var ancestorId in skill.Ancestors)
+                if (child.Status == SkillStatus.Learned)
                 {
-                    skillsToUpdate.Add(Skills.First(x => x.Id == ancestorId));
+                    if (!HasConnectionWithRoot(childId, id))
+                    {
+                        return false;
+                    }
                 }
             }
 
-            UpdateSkillStatuses(skillsToUpdate);
+            return true;
         }
 
-        public bool HasConnectionWithRoot(int id)
+        public void UpdateSkillStatuses(int id, SkillOperation operation)
         {
-            var skill = Skills.First(x => x.Id == id);
+            var skillsToUpdate = new HashSet<Skill>();
+            var skill = GetSkillById(id);
+
+            foreach (var childId in skill.Children)
+            {
+                skillsToUpdate.Add(GetSkillById(childId));
+            }
+
+            if (operation == SkillOperation.Forget)
+            {
+                skillsToUpdate.Add(skill);
+
+                foreach (var ancestorId in skill.Ancestors)
+                {
+                    skillsToUpdate.Add(GetSkillById(ancestorId));
+                }
+            }
+
+            UpdateSkillStatusesInternal(skillsToUpdate);
+        }
+
+        private bool HasConnectionWithRoot(int id, int? exceptionAncestorId = null)
+        {
+            var skill = GetSkillById(id);
             if (skill.Status != SkillStatus.Learned)
             {
                 return false;
@@ -91,6 +83,11 @@ namespace KefirTestProject.Models
             var foundConnection = false;
             foreach (var ancestorId in skill.Ancestors)
             {
+                if (exceptionAncestorId.HasValue && ancestorId == exceptionAncestorId)
+                {
+                    continue;
+                }
+
                 if (HasConnectionWithRoot(ancestorId))
                 {
                     foundConnection = true;
@@ -101,10 +98,44 @@ namespace KefirTestProject.Models
             return foundConnection;
         }
 
-        //public bool CheckForgetPossibility(int id)
-        //{
-        //    var foundConnections = _connections.Where(x => x.HasId(id));
+        private void SetupChildren()
+        {
+            foreach (var skill in Skills)
+            {
+                foreach (var ancestorId in skill.Ancestors)
+                {
+                    var ancestor = GetSkillById(ancestorId);
+                    ancestor.AddChild(skill.Id);
+                }
+            }
+        }
 
-        //}
+        private void UpdateSkillStatusesInternal(IEnumerable<Skill> skills)
+        {
+            foreach (var skill in skills)
+            {
+                if (skill.Status == SkillStatus.Learned)
+                {
+                    continue;
+                }
+
+                skill.Status = SkillStatus.Opened;
+
+                foreach (var ancestorId in skill.Ancestors)
+                {
+                    var ancestorSkill = GetSkillById(ancestorId);
+                    if (ancestorSkill.Status != SkillStatus.Learned)
+                    {
+                        skill.Status = SkillStatus.Closed;
+                        break;
+                    }
+                }
+            }
+        }
+
+        private Skill GetSkillById(int id)
+        {
+            return Skills.First(x => x.Id == id);
+        }
     }
 }

@@ -42,21 +42,21 @@ namespace KefirTestProject.Presenters
         private void OnForgetSkillClicked(int id)
         {
             _selectedSkill.Status = SkillStatus.Opened;
-            _skillGraph.UpdateSkillStatuses(id, false);
-            _skillGraphView.UpdateSkillInteraction(_selectedSkill.Status, _skillGraph.HasConnectionWithRoot(id));
+            _skillGraph.UpdateSkillStatuses(id, SkillOperation.Forget);
+            _skillGraphView.UpdateSkillInteraction(_selectedSkill.Status, _skillGraph.CheckForgetPossibility(id));
         }
 
         private void OnLearnSkillClicked(int id)
         {
             _selectedSkill.Status = SkillStatus.Learned;
-            _skillGraph.UpdateSkillStatuses(id, true);
-            _skillGraphView.UpdateSkillInteraction(_selectedSkill.Status, _skillGraph.HasConnectionWithRoot(id));
+            _skillGraph.UpdateSkillStatuses(id, SkillOperation.Learn);
+            _skillGraphView.UpdateSkillInteraction(_selectedSkill.Status, _skillGraph.CheckForgetPossibility(id));
         }
 
         private void OnSkillSelectionChanged(int id)
         {
             _selectedSkill = _skillGraph.Skills.First(x => x.Id == id);
-            _skillGraphView.UpdateSkillInteraction(_selectedSkill.Status, _skillGraph.HasConnectionWithRoot(id));
+            _skillGraphView.UpdateSkillInteraction(_selectedSkill.Status, _skillGraph.CheckForgetPossibility(id));
         }
     }
 }
