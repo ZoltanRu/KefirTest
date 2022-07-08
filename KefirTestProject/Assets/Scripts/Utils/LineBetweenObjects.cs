@@ -8,7 +8,6 @@ namespace KefirTestProject.Utils
     {
         private RectTransform _firstTransform;
         private RectTransform _secondTransform;
-
         private RectTransform _rectTransform;
 
         private void Awake()
@@ -21,10 +20,9 @@ namespace KefirTestProject.Utils
             _firstTransform = one.GetComponent<RectTransform>();
             _secondTransform = two.GetComponent<RectTransform>();
 
-            RectTransform temp;
             if (_firstTransform.localPosition.x > _secondTransform.localPosition.x)
             {
-                temp = _firstTransform;
+                var temp = _firstTransform;
                 _firstTransform = _secondTransform;
                 _secondTransform = temp;
             }

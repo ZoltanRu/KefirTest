@@ -14,7 +14,6 @@ namespace KefirTestProject.Presenters
         private readonly IList<SkillPresenter> _skillPresenters = new List<SkillPresenter>();
         private ISkillGraphView _skillGraphView;
         private SkillGraph _skillGraph;
-
         private Skill _selectedSkill;
 
         private bool IsEnoughSkillPoints => _selectedSkill.SkillPoints <= _playerStatsPresenter.PlayerStats.SkillPoints;
@@ -24,9 +23,9 @@ namespace KefirTestProject.Presenters
             _playerStatsPresenter.PlayerStats.SkillPointsChanged += UpdateSkillInteraction;
 
             _skillGraphView = GetComponent<ISkillGraphView>();
-            _skillGraphView.SkillSelectionChanged += OnSkillSelectionChanged;
             _skillGraphView.LearnSkillClicked += OnLearnSkillClicked;
             _skillGraphView.ForgetSkillClicked += OnForgetSkillClicked;
+            _skillGraphView.SkillSelectionChanged += OnSkillSelectionChanged;
 
             foreach (var skillView in _skillGraphView.SkillViews)
             {
@@ -41,9 +40,9 @@ namespace KefirTestProject.Presenters
         {
             _playerStatsPresenter.PlayerStats.SkillPointsChanged -= UpdateSkillInteraction;
 
-            _skillGraphView.SkillSelectionChanged -= OnSkillSelectionChanged;
             _skillGraphView.LearnSkillClicked -= OnLearnSkillClicked;
             _skillGraphView.ForgetSkillClicked -= OnForgetSkillClicked;
+            _skillGraphView.SkillSelectionChanged -= OnSkillSelectionChanged;
         }
 
         private void OnForgetSkillClicked(int id)

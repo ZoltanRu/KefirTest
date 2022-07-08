@@ -11,9 +11,7 @@ namespace KefirTestProject.Models
         private SkillStatus _status;
 
         public int Id { get; set; } 
-
         public int SkillPoints { get; set; }
-
         public IList<int> Ancestors { get; }
         public IList<int> Children { get; }
 

@@ -11,9 +11,9 @@ namespace KefirTestProject.Views
 {
     public class SkillGraphView : MonoBehaviour, ISkillGraphView
     {
-        public event Action<int> SkillSelectionChanged;
         public event Action<int> LearnSkillClicked;
         public event Action<int> ForgetSkillClicked;
+        public event Action<int> SkillSelectionChanged;
 
         [SerializeField] private List<SkillView> _skillViews;
 
@@ -29,6 +29,16 @@ namespace KefirTestProject.Views
         private GameObject _selector;
 
         public IList<SkillView> SkillViews => _skillViews;
+
+        public void UpdateSkillInteraction(SkillStatus skillStatus, 
+            bool hasConnectionWithRoot,
+            bool isEnoughSkillPoints)
+        {
+            _forgetSkillButton.interactable = 
+                hasConnectionWithRoot && _selectedView.SkillAsset.Id != 0;
+            _learnSkillButton.interactable = 
+                skillStatus == SkillStatus.Opened && isEnoughSkillPoints;
+        }
 
         private void Awake()
         {
@@ -91,16 +101,6 @@ namespace KefirTestProject.Views
         private void LearnSkill()
         {
             LearnSkillClicked?.Invoke(_selectedView.SkillAsset.Id);
-        }
-
-        public void UpdateSkillInteraction(SkillStatus skillStatus, 
-            bool hasConnectionWithRoot,
-            bool isEnoughSkillPoints)
-        {
-            _forgetSkillButton.interactable = 
-                hasConnectionWithRoot && _selectedView.SkillAsset.Id != 0;
-            _learnSkillButton.interactable = 
-                skillStatus == SkillStatus.Opened && isEnoughSkillPoints;
         }
     }
 }

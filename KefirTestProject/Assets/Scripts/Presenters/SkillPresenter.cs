@@ -24,7 +24,7 @@ namespace KefirTestProject.Presenters
             Skill.SkillStatusChanged -= UpdateSkillView;
         }
 
-        public void CreateSkillFromSkillView()
+        private void CreateSkillFromSkillView()
         {
             var skillAsset = _skillView.SkillAsset;
             Skill = new Skill(skillAsset.Id, skillAsset.SkillPoints, skillAsset.Ancestors);

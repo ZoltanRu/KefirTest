@@ -24,7 +24,7 @@ namespace KefirTestProject.Presenters
 
         private void OnDestroy()
         {
-            _playerStats.SkillPointsChanged += UpdateSkillPointView;
+            _playerStats.SkillPointsChanged -= UpdateSkillPointView;
             _playerStatsView.SkillPointsChanged -= UpdateSkillPointModel;
         }
 
