@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3122a747678d4783be100a717fde4e69, type: 3}
   m_Name: Skill 1
   m_EditorClassIdentifier: 
+  _id: 1
   _name: 1
   _skillPoints: 1
   _skillIcon: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  _ancestors: 00000000

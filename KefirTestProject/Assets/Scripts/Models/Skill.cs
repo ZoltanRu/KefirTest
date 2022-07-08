@@ -1,17 +1,40 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using KefirTestProject.Enums;
 
 namespace KefirTestProject.Models
 {
     public class Skill
     {
+        public event Action SkillStatusChanged;
+
+        private SkillStatus _status;
+
+        public int Id { get; set; } 
+
         public int SkillPoints { get; set; }
 
-        public List<Skill> Ancestors { get; private set; }
+        public IList<int> Ancestors { get; }
 
-        public Skill(int skillPoints, List<Skill> ancestors = null)
+        public SkillStatus Status
         {
+            get => _status;
+            set
+            {
+                if (_status == value)
+                    return;
+
+                _status = value;
+                SkillStatusChanged?.Invoke();
+            }
+        }
+
+        public Skill(int id, int skillPoints, IList<int> ancestors)
+        {
+            Id = id;
             SkillPoints = skillPoints;
             Ancestors = ancestors;
+            Status = SkillStatus.Closed;
         }
     }
 }
