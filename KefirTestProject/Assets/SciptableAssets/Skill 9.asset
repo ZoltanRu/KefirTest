@@ -15,5 +15,5 @@ MonoBehaviour:
   _id: 9
   _name: 9
   _skillPoints: 1
-  _skillIcon: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  _skillIcon: {fileID: 21300000, guid: 73895c290d761a14fb6c91ab07804296, type: 3}
   _ancestors: 00000000

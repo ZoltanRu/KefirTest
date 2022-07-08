@@ -68,6 +68,11 @@ namespace KefirTestProject.Presenters
 
         private void UpdateSkillInteraction()
         {
+            if (_selectedSkill == null)
+            {
+                return;
+            }
+
             _skillGraphView.UpdateSkillInteraction(_selectedSkill.Status,
                 _skillGraph.CheckForgetPossibility(_selectedSkill.Id),
                 IsEnoughSkillPoints);
