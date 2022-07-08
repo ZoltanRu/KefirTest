@@ -11,6 +11,7 @@ namespace KefirTestProject.Views
 {
     public class SkillGraphView : MonoBehaviour, ISkillGraphView
     {
+        public event Action ForgetAllClicked;
         public event Action<int> LearnSkillClicked;
         public event Action<int> ForgetSkillClicked;
         public event Action<int> SkillSelectionChanged;
@@ -24,18 +25,21 @@ namespace KefirTestProject.Views
         [Header("Skill Selection")] 
         [SerializeField] private Button _learnSkillButton;
         [SerializeField] private Button _forgetSkillButton;
+        [SerializeField] private Button _forgetAllButton;
 
         private SkillView _selectedView;
         private GameObject _selector;
 
         public IList<SkillView> SkillViews => _skillViews;
 
-        public void UpdateSkillInteraction(SkillStatus skillStatus, 
-            bool hasConnectionWithRoot,
+        public void UpdateSkillInteraction(SkillStatus skillStatus,
+            bool isForgetPossible,
+            bool isForgetAllPossible,
             bool isEnoughSkillPoints)
         {
-            _forgetSkillButton.interactable = 
-                hasConnectionWithRoot && _selectedView.SkillAsset.Id != 0;
+            _forgetSkillButton.interactable =
+                isForgetPossible && _selectedView.SkillAsset.Id != 0;
+            _forgetAllButton.interactable = isForgetAllPossible;
             _learnSkillButton.interactable = 
                 skillStatus == SkillStatus.Opened && isEnoughSkillPoints;
         }
@@ -44,8 +48,10 @@ namespace KefirTestProject.Views
         {
             _learnSkillButton.onClick.AddListener(LearnSkill);
             _forgetSkillButton.onClick.AddListener(ForgetSkill);
+            _forgetAllButton.onClick.AddListener(ForgetAll);
             _learnSkillButton.interactable = false;
             _forgetSkillButton.interactable = false;
+            _forgetAllButton.interactable = false;
 
             SetupViews();
         }
@@ -59,6 +65,7 @@ namespace KefirTestProject.Views
 
             _learnSkillButton.onClick.RemoveListener(LearnSkill);
             _forgetSkillButton.onClick.RemoveListener(ForgetSkill);
+            _forgetAllButton.onClick.RemoveListener(ForgetAll);
         }
 
         private void SetupViews()
@@ -91,6 +98,11 @@ namespace KefirTestProject.Views
             _selector.transform.localPosition = _selectedView.transform.localPosition;
 
             SkillSelectionChanged?.Invoke(id);
+        }
+
+        private void ForgetAll()
+        {
+            ForgetAllClicked?.Invoke();
         }
 
         private void ForgetSkill()

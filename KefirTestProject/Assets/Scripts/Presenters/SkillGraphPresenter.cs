@@ -25,6 +25,7 @@ namespace KefirTestProject.Presenters
             _skillGraphView = GetComponent<ISkillGraphView>();
             _skillGraphView.LearnSkillClicked += OnLearnSkillClicked;
             _skillGraphView.ForgetSkillClicked += OnForgetSkillClicked;
+            _skillGraphView.ForgetAllClicked += OnForgetAllClicked;
             _skillGraphView.SkillSelectionChanged += OnSkillSelectionChanged;
 
             foreach (var skillView in _skillGraphView.SkillViews)
@@ -42,7 +43,15 @@ namespace KefirTestProject.Presenters
 
             _skillGraphView.LearnSkillClicked -= OnLearnSkillClicked;
             _skillGraphView.ForgetSkillClicked -= OnForgetSkillClicked;
+            _skillGraphView.ForgetAllClicked -= OnForgetAllClicked;
             _skillGraphView.SkillSelectionChanged -= OnSkillSelectionChanged;
+        }
+
+        private void OnForgetAllClicked()
+        {
+            var skillPoints = _skillGraph.LearnedSkills.Sum(x => x.SkillPoints); ;
+            _skillGraph.ForgetAll();
+            _playerStatsPresenter.PlayerStats.SkillPoints += skillPoints;
         }
 
         private void OnForgetSkillClicked(int id)
@@ -74,6 +83,7 @@ namespace KefirTestProject.Presenters
 
             _skillGraphView.UpdateSkillInteraction(_selectedSkill.Status,
                 _skillGraph.CheckForgetPossibility(_selectedSkill.Id),
+                _skillGraph.LearnedSkills.Count > 0,
                 IsEnoughSkillPoints);
         }
     }

@@ -8,6 +8,9 @@ namespace KefirTestProject.Models
     {
         public IList<Skill> Skills { get; }
 
+        public IList<Skill> LearnedSkills =>
+            Skills.Where(x => x.Id != 0 && x.Status == SkillStatus.Learned).ToList();
+
         public SkillGraph(IList<Skill> skills)
         {
             Skills = skills;
@@ -47,6 +50,15 @@ namespace KefirTestProject.Models
         public Skill GetSkillById(int id)
         {
             return Skills.First(x => x.Id == id);
+        }
+
+        public void ForgetAll()
+        {
+            foreach (var learnedSkill in LearnedSkills)
+            {
+                learnedSkill.Status = SkillStatus.Closed;
+            }
+            UpdateSkillStatusesInternal(Skills);
         }
 
         public void UpdateSkillStatuses(int id, SkillOperation operation)

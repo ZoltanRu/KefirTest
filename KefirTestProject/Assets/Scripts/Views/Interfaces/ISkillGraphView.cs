@@ -6,6 +6,7 @@ namespace KefirTestProject.Views.Interfaces
 {
     public interface ISkillGraphView : IView
     {
+        event Action ForgetAllClicked;
         event Action<int> LearnSkillClicked;
         event Action<int> ForgetSkillClicked;
         event Action<int> SkillSelectionChanged;
@@ -13,6 +14,8 @@ namespace KefirTestProject.Views.Interfaces
         IList<SkillView> SkillViews { get; }
 
         void UpdateSkillInteraction(SkillStatus skillStatus, 
-            bool isForgetPossible, bool isEnoughSkillPoints);
+            bool isForgetPossible,
+            bool isForgetAllPossible,
+            bool isEnoughSkillPoints);
     }
 }
